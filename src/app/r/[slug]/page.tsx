@@ -77,7 +77,7 @@ export default function ReviewPage() {
         <div className="text-center max-w-md">
           <div className="text-5xl mb-4">&#10003;</div>
           <h1 className="text-2xl font-semibold mb-2">Thank you!</h1>
-          <p className="text-gray-500">
+          <p className="text-black">
             Your review for <strong>{business.name}</strong> has been submitted and is awaiting approval.
           </p>
         </div>
@@ -89,9 +89,9 @@ export default function ReviewPage() {
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Leave a review</h1>
-          <p className="text-gray-600 mt-1">{business.name}</p>
-          {business.description && <p className="text-sm text-gray-500 mt-1">{business.description}</p>}
+          <h1 className="text-2xl font-bold text-black">Leave a review</h1>
+          <p className="text-black mt-1">{business.name}</p>
+          {business.description && <p className="text-sm text-black mt-1">{business.description}</p>}
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-4">
@@ -99,7 +99,7 @@ export default function ReviewPage() {
 
           {/* Star Rating */}
           <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">Rating</label>
+            <label className="block text-sm font-medium text-black mb-2">Rating</label>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -119,35 +119,35 @@ export default function ReviewPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-900 mb-1">Your name</label>
+            <label className="block text-sm font-medium text-black mb-1">Your name</label>
             <input
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="John D."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-900 mb-1">Email (optional)</label>
+            <label className="block text-sm font-medium text-black mb-1">Email (optional)</label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="john@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-900 mb-1">Your review</label>
+            <label className="block text-sm font-medium text-black mb-1">Your review</label>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               required
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
               placeholder="Tell us about your experience..."
             />
           </div>

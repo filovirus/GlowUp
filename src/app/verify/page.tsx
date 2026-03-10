@@ -81,8 +81,8 @@ function VerifyForm() {
           <Link href="/" className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
             GlowUp
           </Link>
-          <h1 className="mt-4 text-2xl font-bold text-gray-900">Check your email</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="mt-4 text-2xl font-bold text-black">Check your email</h1>
+          <p className="mt-2 text-black">
             We sent a 6-digit code to <strong>{email}</strong>
           </p>
         </div>
