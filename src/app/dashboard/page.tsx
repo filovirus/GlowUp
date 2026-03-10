@@ -222,6 +222,29 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div>
+                      <label className="text-xs text-gray-400 block mb-1">QR Code (print or display for customers to scan)</label>
+                      <div className="flex items-center gap-4 mt-2">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`/api/qr?url=${encodeURIComponent(`${baseUrl}/r/${currentBiz.slug}`)}`}
+                          width={150}
+                          height={150}
+                          alt="QR Code"
+                          className="border border-gray-100 rounded-lg p-2"
+                        />
+                        <div className="text-sm text-gray-500">
+                          <p className="mb-2">Customers scan this to leave a review.</p>
+                          <a
+                            href={`/api/qr?url=${encodeURIComponent(`${baseUrl}/r/${currentBiz.slug}`)}`}
+                            download={`${currentBiz.slug}-qr.svg`}
+                            className="px-3 py-1.5 bg-purple-50 text-purple-600 rounded-lg text-sm hover:bg-purple-100 inline-block"
+                          >
+                            Download QR Code
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
                       <label className="text-xs text-gray-400 block mb-1">Embed code (paste on your website)</label>
                       <div className="flex gap-2">
                         <code className="flex-1 bg-gray-50 px-3 py-2 rounded-lg text-sm text-gray-600 overflow-x-auto">

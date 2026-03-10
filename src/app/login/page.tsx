@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const verified = searchParams.get("verified");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +25,7 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      setError("Invalid email or password");
+      setError("Invalid email or password. Make sure your email is verified.");
       setLoading(false);
       return;
     }
@@ -42,6 +44,11 @@ export default function LoginPage() {
           <p className="mt-2 text-gray-500">Log in to manage your reviews</p>
         </div>
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-4">
+          {verified && (
+            <div className="bg-green-50 text-green-600 text-sm p-3 rounded-lg">
+              Email verified! You can now log in.
+            </div>
+          )}
           {error && (
             <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg">{error}</div>
           )}
@@ -79,5 +86,13 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -15,12 +15,27 @@ export default function SignupPage() {
     setError("");
 
     const form = new FormData(e.currentTarget);
+    const password = form.get("password") as string;
+    const confirmPassword = form.get("confirmPassword") as string;
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      setLoading(false);
+      return;
+    }
+
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: form.get("email"),
-        password: form.get("password"),
+        password,
         name: form.get("name"),
       }),
     });
@@ -32,21 +47,8 @@ export default function SignupPage() {
       return;
     }
 
-    // Auto-login after signup
-    const { signIn } = await import("next-auth/react");
-    const result = await signIn("credentials", {
-      email: form.get("email"),
-      password: form.get("password"),
-      redirect: false,
-    });
-
-    if (result?.error) {
-      setError("Account created but login failed. Please log in manually.");
-      setLoading(false);
-      return;
-    }
-
-    router.push("/dashboard");
+    const data = await res.json();
+    router.push(`/verify?email=${encodeURIComponent(data.email)}`);
   }
 
   return (
@@ -91,6 +93,17 @@ export default function SignupPage() {
               minLength={6}
               className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="At least 6 characters"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <input
+              name="confirmPassword"
+              type="password"
+              required
+              minLength={6}
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Type your password again"
             />
           </div>
           <button
