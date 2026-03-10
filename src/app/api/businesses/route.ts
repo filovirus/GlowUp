@@ -28,6 +28,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Business name required" }, { status: 400 });
   }
 
+  // Free tier: max 1 business
+  const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+  if (user?.plan === "free") {
+    const count = await prisma.business.count({ where: { userId: session.user.id } });
+    if (count >= 1) {
+      return NextResponse.json(
+        { error: "Free plan allows 1 business. Upgrade to Pro for unlimited." },
+        { status: 403 }
+      );
+    }
+  }
+
   // Generate slug from name
   let slug = name
     .toLowerCase()

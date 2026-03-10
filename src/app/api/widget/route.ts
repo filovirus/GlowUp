@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
   const business = await prisma.business.findUnique({
     where: { slug },
     include: {
+      user: { select: { plan: true } },
       reviews: {
         where: { approved: true },
         orderBy: { createdAt: "desc" },
@@ -26,6 +27,7 @@ export async function GET(req: NextRequest) {
     });
   }
 
+  const isPro = business.user.plan === "pro";
   const avgRating =
     business.reviews.length > 0
       ? (business.reviews.reduce((sum, r) => sum + r.rating, 0) / business.reviews.length).toFixed(1)
@@ -46,37 +48,56 @@ export async function GET(req: NextRequest) {
   var bizName = ${JSON.stringify(business.name)};
   var avg = ${avgRating};
   var count = reviews.length;
+  var isPro = ${isPro};
 
   function stars(n) {
     var s = '';
     for (var i = 1; i <= 5; i++) {
-      s += '<span style="color:' + (i <= n ? '#facc15' : '#e5e7eb') + ';font-size:16px;">&#9733;</span>';
+      s += '<span style="color:' + (i <= n ? '#facc15' : '#e5e7eb') + ';font-size:18px;">&#9733;</span>';
     }
     return s;
   }
 
-  var html = '<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:500px;border:1px solid #e5e7eb;border-radius:16px;padding:24px;background:#fff;">';
-  html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">';
-  html += '<strong style="font-size:16px;">' + bizName + '</strong>';
-  html += '<span style="color:#facc15;">&#9733;</span>';
-  html += '<span style="font-size:14px;color:#6b7280;">' + avg + ' (' + count + ' reviews)</span>';
+  function initials(name) {
+    return name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+  }
+
+  var colors = ['#7c3aed','#ec4899','#f59e0b','#10b981','#3b82f6','#ef4444'];
+
+  var html = '<div style="font-family:-apple-system,BlinkMacSystemFont,\\'Segoe UI\\',sans-serif;max-width:520px;border:1px solid #e5e7eb;border-radius:20px;padding:28px;background:#fff;box-shadow:0 4px 24px rgba(0,0,0,0.06);">';
+
+  html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #f3f4f6;">';
+  html += '<div style="display:flex;align-items:center;gap:4px;">';
+  html += '<span style="color:#facc15;font-size:22px;">&#9733;</span>';
+  html += '<span style="font-size:24px;font-weight:700;color:#111;">' + avg + '</span>';
+  html += '</div>';
+  html += '<div style="font-size:14px;color:#6b7280;">' + count + ' review' + (count !== 1 ? 's' : '') + ' for <strong style="color:#111;">' + bizName + '</strong></div>';
   html += '</div>';
 
-  reviews.forEach(function(r) {
-    html += '<div style="border:1px solid #f3f4f6;border-radius:12px;padding:12px;margin-bottom:8px;">';
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">';
-    html += '<strong style="font-size:14px;">' + r.author + '</strong>';
-    html += stars(r.rating);
+  reviews.forEach(function(r, idx) {
+    var color = colors[idx % colors.length];
+    html += '<div style="padding:16px 0;' + (idx < reviews.length - 1 ? 'border-bottom:1px solid #f3f4f6;' : '') + '">';
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">';
+    html += '<div style="width:36px;height:36px;border-radius:50%;background:' + color + ';color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;">' + initials(r.author) + '</div>';
+    html += '<div>';
+    html += '<div style="font-weight:600;font-size:14px;color:#111;">' + r.author + '</div>';
+    html += '<div style="display:flex;align-items:center;gap:6px;">' + stars(r.rating) + '<span style="font-size:12px;color:#9ca3af;">' + r.date + '</span></div>';
     html += '</div>';
-    html += '<p style="color:#4b5563;font-size:14px;margin:0;">' + r.text + '</p>';
+    html += '</div>';
+    html += '<p style="color:#374151;font-size:14px;line-height:1.5;margin:0 0 0 46px;">' + r.text + '</p>';
     html += '</div>';
   });
 
   if (count === 0) {
-    html += '<p style="color:#9ca3af;text-align:center;padding:16px 0;">No reviews yet.</p>';
+    html += '<p style="color:#9ca3af;text-align:center;padding:24px 0;font-size:14px;">No reviews yet.</p>';
   }
 
-  html += '<div style="text-align:center;margin-top:12px;font-size:11px;color:#d1d5db;">Powered by GlowUp</div>';
+  if (!isPro) {
+    html += '<div style="text-align:center;margin-top:16px;padding-top:12px;border-top:1px solid #f3f4f6;font-size:12px;color:#c4b5fd;">';
+    html += '<a href="https://glow-up-navy.vercel.app" target="_blank" style="color:#a78bfa;text-decoration:none;">Powered by GlowUp</a>';
+    html += '</div>';
+  }
+
   html += '</div>';
 
   document.currentScript.insertAdjacentHTML('afterend', html);

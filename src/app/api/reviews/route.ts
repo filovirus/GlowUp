@@ -13,9 +13,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Rating must be 1-5" }, { status: 400 });
   }
 
-  const business = await prisma.business.findUnique({ where: { id: businessId } });
+  const business = await prisma.business.findUnique({
+    where: { id: businessId },
+    include: { user: true },
+  });
   if (!business) {
     return NextResponse.json({ error: "Business not found" }, { status: 404 });
+  }
+
+  // Free tier: max 10 reviews per business
+  if (business.user.plan === "free") {
+    const reviewCount = await prisma.review.count({ where: { businessId } });
+    if (reviewCount >= 10) {
+      return NextResponse.json(
+        { error: "This business has reached its review limit. The owner needs to upgrade to accept more reviews." },
+        { status: 403 }
+      );
+    }
   }
 
   const review = await prisma.review.create({
