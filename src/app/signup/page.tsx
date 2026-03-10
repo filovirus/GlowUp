@@ -58,51 +58,51 @@ export default function SignupPage() {
           <Link href="/" className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
             GlowUp
           </Link>
-          <h1 className="mt-4 text-2xl font-semibold">Create your account</h1>
-          <p className="mt-2 text-gray-500">Start collecting reviews in minutes</p>
+          <h1 className="mt-4 text-2xl font-bold text-gray-900">Create your account</h1>
+          <p className="mt-2 text-gray-600">Start collecting reviews in minutes</p>
         </div>
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-4">
           {error && (
             <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg">{error}</div>
           )}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Name</label>
             <input
               name="name"
               type="text"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Your name"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Email</label>
             <input
               name="email"
               type="email"
               required
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="you@example.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Password</label>
             <input
               name="password"
               type="password"
               required
               minLength={6}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="At least 6 characters"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <label className="block text-sm font-medium text-gray-900 mb-1">Confirm Password</label>
             <input
               name="confirmPassword"
               type="password"
               required
               minLength={6}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Type your password again"
             />
           </div>
