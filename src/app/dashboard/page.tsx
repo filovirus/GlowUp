@@ -45,7 +45,7 @@ function DashboardContent() {
   const [newBizWeb, setNewBizWeb] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [plan, setPlan] = useState<string>("free");
+  const [plan, setPlan] = useState<string | null>(null);
   const [addError, setAddError] = useState("");
   const [upgraded, setUpgraded] = useState(searchParams.get("upgraded") === "true");
 
@@ -142,9 +142,17 @@ function DashboardContent() {
   }
 
   async function handleUpgrade() {
-    const res = await fetch("/api/stripe/checkout", { method: "POST" });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
+    try {
+      const res = await fetch("/api/stripe/checkout", { method: "POST" });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "Failed to start checkout. Please try again.");
+      }
+    } catch {
+      alert("Something went wrong. Please try again.");
+    }
   }
 
   async function handleManageBilling() {
@@ -170,12 +178,12 @@ function DashboardContent() {
           </Link>
           <div className="flex items-center gap-3">
             {plan === "pro" ? (
-              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium">Pro</span>
-            ) : (
+              <button onClick={handleManageBilling} className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium hover:bg-purple-200">Pro</button>
+            ) : plan === "free" ? (
               <button onClick={handleUpgrade} className="text-xs bg-purple-600 text-white px-3 py-1 rounded-full font-medium hover:bg-purple-700">
                 Upgrade to Pro
               </button>
-            )}
+            ) : null}
             <div className="relative">
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
